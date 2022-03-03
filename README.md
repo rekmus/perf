@@ -1,2 +1,2 @@
 # perf
-Performance tester based on Silgy
+Performance tester with browser interface based on Node++
