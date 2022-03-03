@@ -17,9 +17,10 @@ void gen_header(int ci)
     OUT("<!DOCTYPE html>");
     OUT("<html>");
     OUT("<head>");
+    OUT("<meta charset=\"UTF-8\">");
     OUT("<title>%s</title>", NPP_APP_NAME);
-    if ( REQ_MOB )  // if mobile request
-        OUT("<meta name=\"viewport\" content=\"width=device-width\">");
+    OUT("<link rel=\"stylesheet\" type=\"text/css\" href=\"npp.css\">");
+    OUT("<script src=\"npp.js\"></script>");
     OUT("<link rel=\"stylesheet\" type=\"text/css\" href=\"dsk.css\">");
     OUT("<script src=\"dsk.js\"></script>");
     OUT("</head>");
@@ -47,7 +48,6 @@ void gen_header(int ci)
 -------------------------------------------------------------------------- */
 void gen_footer(int ci)
 {
-    OUT("<div id=\"wait\" class=wt></div>");
     OUT("</body></html>");
 }
 
@@ -75,18 +75,12 @@ void gen_page_main(int ci)
 -------------------------------------------------------------------------- */
 void sendreqs(int ci)
 {
-    QSVAL batch;
-    if ( !QS("batch", batch) ) return;
-    QSVAL url;
-    if ( !QS("url", url) ) return;
-    QSVAL times;
-    if ( !QS("times", times) ) return;
+    if ( !QSI("batch", &SESSION_DATA.batch) ) return;
+    if ( !QS("url", SESSION_DATA.url) ) return;
+    if ( !QSI("times", &SESSION_DATA.times) ) return;
 
-    SESSION_DATA.batch = atoi(batch);
-    strcpy(SESSION_DATA.url, url);
-    SESSION_DATA.times = atoi(times);
     if ( SESSION_DATA.times < 1 ) SESSION_DATA.times = 1;
-    if ( SESSION_DATA.times > 1000 ) SESSION_DATA.times = 1000;
+    if ( SESSION_DATA.times > 10000 ) SESSION_DATA.times = 10000;
 
     INF("batch = %d", SESSION_DATA.batch);
     INF("URL [%s]", SESSION_DATA.url);
