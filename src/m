@@ -1,41 +1,25 @@
 #!/bin/sh
 
-
-cd ../bin
-silgystop
-cd ../src
-
-
-echo Making silgy_app...
-
-g++ silgy_app.cpp \
-../lib/silgy_eng.c ../lib/silgy_lib.c ../lib/silgy_usr.c \
--I. -I../lib \
--lrt -lz \
--s -O3 \
--o ../bin/silgy_app
+# ----------------------------------------------------------------------------
+# Set the local compilation environment here
+# ----------------------------------------------------------------------------
 
 
-echo Making silgy_svc...
+# ----------------------------------------------------------------------------
+# Set include path (might be required for OpenSSL and MySQL)
+# Example: export CPATH=/usr/include/mysql
 
-g++ silgy_svc.cpp \
-../lib/silgy_eng.c ../lib/silgy_lib.c ../lib/silgy_usr.c \
--D SILGY_SVC \
--I. -I../lib \
--lrt \
--s -O3 \
--o ../bin/silgy_svc
+#export CPATH=
 
 
-echo Making silgy_watcher...
+# ----------------------------------------------------------------------------
+# Set library path (might be required for OpenSSL and MySQL)
+# Example: export LIBRARY_PATH=/usr/lib64/mysql
 
-gcc ../lib/silgy_watcher.c \
-../lib/silgy_lib.c \
--D SILGY_WATCHER \
--I. -I../lib \
--s -O3 \
--o ../bin/silgy_watcher
+#export LIBRARY_PATH=
 
-#cd ../bin
-#silgystart
-#cd ../src
+
+# ----------------------------------------------------------------------------
+# Call the main making script (don't change this)
+
+../bin/nppmake $1

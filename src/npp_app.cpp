@@ -1,12 +1,12 @@
 /* --------------------------------------------------------------------------
-   Silgy Web App
+   Node++ Web App
    Jurek Muszynski
 -----------------------------------------------------------------------------
    Web App Performance Tester
 -------------------------------------------------------------------------- */
 
 
-#include <silgy.h>
+#include <npp.h>
 
 
 /* --------------------------------------------------------------------------
@@ -17,7 +17,7 @@ void gen_header(int ci)
     OUT("<!DOCTYPE html>");
     OUT("<html>");
     OUT("<head>");
-    OUT("<title>%s</title>", APP_WEBSITE);
+    OUT("<title>%s</title>", NPP_APP_NAME);
     if ( REQ_MOB )  // if mobile request
         OUT("<meta name=\"viewport\" content=\"width=device-width\">");
     OUT("<link rel=\"stylesheet\" type=\"text/css\" href=\"dsk.css\">");
@@ -27,9 +27,9 @@ void gen_header(int ci)
     OUT("<body>");
 
     if ( REQ("") || REQ("dashboard") )
-        OUT("<h1>%s</h1>", APP_WEBSITE);
+        OUT("<h1>%s</h1>", NPP_APP_NAME);
     else
-        OUT("<h1><a href=\"/\" %s>%s</a></h1>", WAIT, APP_WEBSITE);
+        OUT("<h1><a href=\"/\" %s>%s</a></h1>", WAIT, NPP_APP_NAME);
 
     char lnk_home[256]="<a href=\"/\" onClick=\"wait();\">Home</a>";
 
@@ -82,29 +82,39 @@ void sendreqs(int ci)
     QSVAL times;
     if ( !QS("times", times) ) return;
 
-    AUS.batch = atoi(batch);
-    strcpy(AUS.url, url);
-    AUS.times = atoi(times);
-    if ( AUS.times < 1 ) AUS.times = 1;
-    if ( AUS.times > 1000 ) AUS.times = 1000;
+    SESSION_DATA.batch = atoi(batch);
+    strcpy(SESSION_DATA.url, url);
+    SESSION_DATA.times = atoi(times);
+    if ( SESSION_DATA.times < 1 ) SESSION_DATA.times = 1;
+    if ( SESSION_DATA.times > 1000 ) SESSION_DATA.times = 1000;
 
-    INF("batch = %d", AUS.batch);
-    INF("URL [%s]", AUS.url);
-    INF("times = %d", AUS.times);
+    INF("batch = %d", SESSION_DATA.batch);
+    INF("URL [%s]", SESSION_DATA.url);
+    INF("times = %d", SESSION_DATA.times);
 
     CALL_ASYNC_TM("sendreqs", 600);   // 10 minutes timeout
 }
 
 
 /* --------------------------------------------------------------------------------
-   Called after parsing HTTP request header
-   ------------------------------
    This is the main entry point for a request
    ------------------------------
-   Response status will be 200 by default
+   Called after parsing HTTP request headers
+   ------------------------------
+   If required (NPP_REQUIRED_AUTH_LEVEL >= AUTH_LEVEL_ANONYMOUS),
+   the session is already created
+
+   If valid ls cookie is present in the request or
+   it's over existing connection that has already been authenticated,
+   the session is already authenticated
+   ------------------------------
+   Response status is 200 by default
    Use RES_STATUS() if you want to change it
+
+   Response content type is text/html by default
+   Use RES_CONTENT_TYPE() if you want to change it
 -------------------------------------------------------------------------------- */
-void silgy_app_main(int ci)
+void npp_app_main(int ci)
 {
     if ( REQ("sendreqs") )
         sendreqs(ci);
@@ -119,9 +129,9 @@ void silgy_app_main(int ci)
    Return true if everything OK
    ------------------------------
    Returning false will stop booting process,
-   silgy_app_done() will be called and application will be terminated
+   npp_app_done() will be called and application will be terminated
 -------------------------------------------------------------------------------- */
-bool silgy_app_init(int argc, char *argv[])
+bool npp_app_init(int argc, char *argv[])
 {
     return true;
 }
@@ -133,10 +143,10 @@ bool silgy_app_init(int argc, char *argv[])
    Return true if everything OK
    ------------------------------
    Returning false will cause the session to be closed
-   and silgy_app_session_done() will be called
+   and npp_app_session_done() will be called
    Response status will be set to 500
 -------------------------------------------------------------------------------- */
-bool silgy_app_session_init(int ci)
+bool npp_app_session_init(int ci)
 {
     return true;
 }
@@ -151,9 +161,9 @@ bool silgy_app_session_init(int ci)
    Return true if everything OK
    ------------------------------
    Returning false will cause the session to be downgraded back to anonymous
-   and silgy_app_user_logout() will be called
+   and npp_app_user_logout() will be called
 -------------------------------------------------------------------------------- */
-bool silgy_app_user_login(int ci)
+bool npp_app_user_login(int ci)
 {
     return true;
 }
@@ -164,7 +174,7 @@ bool silgy_app_user_login(int ci)
    ------------------------------
    Called when downgrading logged in user session to anonymous
 -------------------------------------------------------------------------------- */
-void silgy_app_user_logout(int ci)
+void npp_app_user_logout(int ci)
 {
 }
 
@@ -173,7 +183,7 @@ void silgy_app_user_logout(int ci)
    Called when closing anonymous user session
    After calling this the session memory will be zero-ed
 -------------------------------------------------------------------------------- */
-void silgy_app_session_done(int ci)
+void npp_app_session_done(int ci)
 {
 }
 
@@ -181,6 +191,6 @@ void silgy_app_session_done(int ci)
 /* --------------------------------------------------------------------------------
    Called when application shuts down
 -------------------------------------------------------------------------------- */
-void silgy_app_done()
+void npp_app_done()
 {
 }
