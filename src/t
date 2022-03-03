@@ -1,0 +1,5 @@
+#!/bin/sh
+
+export NPP_DIR=..
+
+$NPP_DIR/bin/npp_app 8080
