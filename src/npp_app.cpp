@@ -61,8 +61,8 @@ void gen_page_main(int ci)
 
     OUT("<table class=m10>");
     OUT("<tr><td class=\"gr rt\">URL:</td><td><input id=\"url\" style=\"width:40em;\" value=\"127.0.0.1:1234\" autofocus %s></td></tr>", ONKEYDOWN);
-    OUT("<tr><td class=\"gr rt\">Batches:</td><td><input id=\"batches\" value=\"1\" %s></td></tr>", ONKEYDOWN);
-    OUT("<tr><td class=\"gr rt\">Times:</td><td><input id=\"times\" value=\"10\" %s></td></tr>", ONKEYDOWN);
+    OUT("<tr><td class=\"gr rt\">Batches:</td><td><input id=\"batches\" value=\"10\" %s></td></tr>", ONKEYDOWN);
+    OUT("<tr><td class=\"gr rt\">Reqs/batch:</td><td><input id=\"times\" value=\"1000\" %s></td></tr>", ONKEYDOWN);
     OUT("<tr><td></td><td><label><input type=\"checkbox\" id=\"keep\" %s> Keep connections open</label></td></tr>", ONKEYDOWN);
     OUT("<tr><td></td><td><button id=\"sbm\" onClick=\"sendreqs();\" style=\"width:7em;height:2.2em;\">Go!</button></td></tr>");
     OUT("</table>");
