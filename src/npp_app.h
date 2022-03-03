@@ -36,6 +36,7 @@ typedef struct {
     char url[256];
     int  batch;
     int  times;
+    bool keep;
     double elapsed;
 } app_session_data_t;
 

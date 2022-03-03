@@ -28,18 +28,24 @@ int sendreqs(int ci)
     struct timespec start;
     clock_gettime(MONOTONIC_CLOCK_NAME, &start);
 
-    char perfreqid[1024];
+    char perfreqid[256];
+    bool success;
 
     for ( int i=0; i<SESSION_DATA.times; ++i )
     {
         DBG_LINE_LONG;
         DBG_LINE_LONG;
 
-        sprintf(perfreqid, "%02d%02d%02d%04d%04d", G_ptm->tm_hour, G_ptm->tm_min, G_ptm->tm_sec, SESSION_DATA.batch, i);
+        sprintf(perfreqid, "%02d%02d%02d%04d%06d", G_ptm->tm_hour, G_ptm->tm_min, G_ptm->tm_sec, SESSION_DATA.batch, i);
         DBG("perfreqid [%s]", perfreqid);
         CALL_HTTP_HEADER_SET("perfreqid", perfreqid);
 
-        if ( !CALL_HTTP(NULL, NULL, "GET", SESSION_DATA.url) )
+        if ( SESSION_DATA.keep )
+            success = npp_call_http(NULL, NULL, "GET", SESSION_DATA.url, FALSE, TRUE);
+        else
+            success = CALL_HTTP(NULL, NULL, "GET", SESSION_DATA.url);
+
+        if ( !success )
         {
             ERR("Remote call failed\n");
             SESSION_DATA.elapsed = npp_elapsed(&start);
@@ -83,7 +89,7 @@ void npp_svc_main(int ci)
         OUT("OK");
 
     OUT("|%s", AMT(G_call_http_average));
-    OUT("|%f", SESSION_DATA.elapsed);
+    OUT("|%0.3lf", SESSION_DATA.elapsed);
 
     RES_DONT_CACHE;
 }

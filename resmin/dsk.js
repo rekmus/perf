@@ -13,16 +13,19 @@ function sendreqs()
     let url = document.getElementById("url").value;
     let batches = document.getElementById("batches").value;
     let times = document.getElementById("times").value;
+    let keep = document.getElementById("keep").checked;
 
     if ( batches < 1 ) batches = 1;
     if ( batches > 1000 ) batches = 1000;
 
     if ( times < 1 ) times = 1;
-    if ( times > 1000 ) times = 1000;
+    if ( times > 100000 ) times = 100000;
 
     p("&nbsp;");
 
     p("Sending "+batches+" batch(es) of "+times+" requests each to "+url);
+
+    p("keep = " + keep);
 
     url = encodeURIComponent(url);
 
@@ -31,7 +34,7 @@ function sendreqs()
     elapsed = 0;
 
     for ( i=1; i<=batches; ++i )
-        sendbatch(url, times, i, batches);
+        sendbatch(url, times, keep, i, batches);
 
     document.getElementById("url").focus();
 }
@@ -40,7 +43,7 @@ function sendreqs()
 // --------------------------------------------------------------------------
 // Send one request
 // --------------------------------------------------------------------------
-function sendbatch(url, times, i, batches)
+function sendbatch(url, times, keep, i, batches)
 {
     let x = new XMLHttpRequest();
 
@@ -77,7 +80,7 @@ function sendbatch(url, times, i, batches)
     };
 
 //    p("Sending batch #"+i+"...");
-    x.open("GET", "sendreqs?batch="+i+"&url="+url+"&times="+times, true);
+    x.open("GET", "sendreqs?batch="+i+"&url="+url+"&times="+times+"&keep="+keep, true);
     x.send();
 //    p("Batch #"+i+" sent");
 }

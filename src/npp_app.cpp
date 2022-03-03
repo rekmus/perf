@@ -63,6 +63,7 @@ void gen_page_main(int ci)
     OUT("<tr><td class=\"gr rt\">URL:</td><td><input id=\"url\" style=\"width:40em;\" value=\"127.0.0.1:1234\" autofocus %s></td></tr>", ONKEYDOWN);
     OUT("<tr><td class=\"gr rt\">Batches:</td><td><input id=\"batches\" value=\"1\" %s></td></tr>", ONKEYDOWN);
     OUT("<tr><td class=\"gr rt\">Times:</td><td><input id=\"times\" value=\"10\" %s></td></tr>", ONKEYDOWN);
+    OUT("<tr><td></td><td><label><input type=\"checkbox\" id=\"keep\" %s> Keep connections open</label></td></tr>", ONKEYDOWN);
     OUT("<tr><td></td><td><button id=\"sbm\" onClick=\"sendreqs();\" style=\"width:7em;height:2.2em;\">Go!</button></td></tr>");
     OUT("</table>");
 
@@ -79,12 +80,15 @@ void sendreqs(int ci)
     if ( !QS("url", SESSION_DATA.url) ) return;
     if ( !QSI("times", &SESSION_DATA.times) ) return;
 
+    QSB("keep", &SESSION_DATA.keep);
+
     if ( SESSION_DATA.times < 1 ) SESSION_DATA.times = 1;
-    if ( SESSION_DATA.times > 10000 ) SESSION_DATA.times = 10000;
+    if ( SESSION_DATA.times > 100000 ) SESSION_DATA.times = 100000;
 
     INF("batch = %d", SESSION_DATA.batch);
     INF("URL [%s]", SESSION_DATA.url);
     INF("times = %d", SESSION_DATA.times);
+    INF("keep = %s", SESSION_DATA.keep?"true":"false");
 
     CALL_ASYNC_TM("sendreqs", 600);   // 10 minutes timeout
 }
