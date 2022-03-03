@@ -59,15 +59,12 @@ function sendbatch(url, times, keep, i, batches)
             {
                 p(i+": Average = "+ret[2]+" ms");
 
-//                elapsed += Number(ret[3]);
-
                 if ( batches_done==batches )    // the last one
                 {
                     elapsed = performance.now() - started;
                     wait_off();
                     p("elapsed: "+elapsed+" ms");
                     let seconds = elapsed / 1000;
-//                    p("seconds: "+seconds);
                     let per_second = (times*batches) / seconds;
                     p(parseInt(per_second, 10) + " per second");
                 }
@@ -75,12 +72,15 @@ function sendbatch(url, times, keep, i, batches)
             else    // error
             {
                 p(i+": Error: "+ret[1]);
+
+                if ( batches_done==batches )    // the last one
+                {
+                    wait_off();
+                }
             }
         }
     };
 
-//    p("Sending batch #"+i+"...");
     x.open("GET", "sendbatch?batch="+i+"&url="+url+"&times="+times+"&keep="+keep, true);
     x.send();
-//    p("Batch #"+i+" sent");
 }
