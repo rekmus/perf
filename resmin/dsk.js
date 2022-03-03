@@ -80,7 +80,7 @@ function sendbatch(url, times, keep, i, batches)
     };
 
 //    p("Sending batch #"+i+"...");
-    x.open("GET", "sendreqs?batch="+i+"&url="+url+"&times="+times+"&keep="+keep, true);
+    x.open("GET", "sendbatch?batch="+i+"&url="+url+"&times="+times+"&keep="+keep, true);
     x.send();
 //    p("Batch #"+i+" sent");
 }

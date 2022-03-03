@@ -17,9 +17,9 @@
 /* --------------------------------------------------------------------------
    Service
 -------------------------------------------------------------------------- */
-int sendreqs(int ci)
+int sendbatch(int ci)
 {
-    INF("sendreqs");
+    INF("sendbatch");
 
     INF("batch = %d", SESSION_DATA.batch);
     INF("URL [%s]", SESSION_DATA.url);
@@ -76,8 +76,8 @@ int sendreqs(int ci)
 -------------------------------------------------------------------------- */
 void npp_svc_main(int ci)
 {
-    if ( SVC("sendreqs") )
-        ASYNC_ERR_CODE = sendreqs(ci);
+    if ( SVC("sendbatch") )
+        ASYNC_ERR_CODE = sendbatch(ci);
 
     OUT("%d|", ASYNC_ERR_CODE);
 

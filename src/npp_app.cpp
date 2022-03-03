@@ -72,9 +72,9 @@ void gen_page_main(int ci)
 
 
 /* --------------------------------------------------------------------------
-   Send requests (AJAX)
+   Send one batch (AJAX)
 -------------------------------------------------------------------------- */
-void sendreqs(int ci)
+void sendbatch(int ci)
 {
     if ( !QSI("batch", &SESSION_DATA.batch) ) return;
     if ( !QS("url", SESSION_DATA.url) ) return;
@@ -90,7 +90,7 @@ void sendreqs(int ci)
     INF("times = %d", SESSION_DATA.times);
     INF("keep = %s", SESSION_DATA.keep?"true":"false");
 
-    CALL_ASYNC_TM("sendreqs", 600);   // 10 minutes timeout
+    CALL_ASYNC_TM("sendbatch", 600);   // 10 minutes timeout
 }
 
 
@@ -114,8 +114,8 @@ void sendreqs(int ci)
 -------------------------------------------------------------------------------- */
 void npp_app_main(int ci)
 {
-    if ( REQ("sendreqs") )
-        sendreqs(ci);
+    if ( REQ("sendbatch") )
+        sendbatch(ci);
     else
         gen_page_main(ci);
 }
