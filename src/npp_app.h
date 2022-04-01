@@ -25,6 +25,13 @@
 #define NPP_MEM_MEDIUM
 
 
+#define NPP_HTTPS
+#define NPP_NO_HSTS
+
+//#define NPP_FD_MON_LINUX_POLL
+//#define NPP_DEBUG
+
+
 #define WAIT                        "onClick=\"wait();\""
 #define ONKEYDOWN                   "onkeydown=\"ent(event);\""
 

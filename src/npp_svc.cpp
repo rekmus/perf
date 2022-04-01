@@ -37,13 +37,13 @@ int sendbatch(int ci)
         DBG_LINE_LONG;
 
         sprintf(perfreqid, "%02d%02d%02d%04d%06d", G_ptm->tm_hour, G_ptm->tm_min, G_ptm->tm_sec, SESSION_DATA.batch, i);
-        DBG("perfreqid [%s]", perfreqid);
+        INF("perfreqid [%s]", perfreqid);
         CALL_HTTP_HEADER_SET("perfreqid", perfreqid);
 
-        if ( SESSION_DATA.keep )
-            success = npp_call_http(NULL, NULL, "GET", SESSION_DATA.url, FALSE, TRUE);
-        else
-            success = CALL_HTTP(NULL, NULL, "GET", SESSION_DATA.url);
+//        if ( SESSION_DATA.keep )
+//            success = npp_call_http(NULL, NULL, "GET", SESSION_DATA.url, FALSE, TRUE);
+//        else
+            success = CALL_HTTP(NULL, NULL, "GET", SESSION_DATA.url, SESSION_DATA.keep);
 
         if ( !success )
         {
@@ -52,7 +52,7 @@ int sendbatch(int ci)
             return ERR_REMOTE_CALL;
         }
 
-        DBG("Remote call OK\n");
+//        INF("Remote call status: %d", CALL_HTTP_STATUS);
     }
 
     SESSION_DATA.elapsed = npp_elapsed(&start);
